@@ -1,0 +1,132 @@
+{
+  "frequencies": {
+    "wifi_2_4_ghz": [
+      {
+        "name": "ch1",
+        "freq": 2412000000.0,
+        "description": "WiFi Channel 1"
+      },
+      {
+        "name": "ch6",
+        "freq": 2437000000.0,
+        "description": "WiFi Channel 6"
+      },
+      {
+        "name": "ch11",
+        "freq": 2462000000.0,
+        "description": "WiFi Channel 11"
+      },
+      {
+        "name": "center",
+        "freq": 2440000000.0,
+        "description": "2.4GHz Center"
+      }
+    ],
+    "wifi_5_ghz": [
+      {
+        "name": "ch36",
+        "freq": 5180000000.0,
+        "description": "WiFi Channel 36"
+      },
+      {
+        "name": "ch100",
+        "freq": 5500000000.0,
+        "description": "WiFi Channel 100"
+      },
+      {
+        "name": "ch149",
+        "freq": 5745000000.0,
+        "description": "WiFi Channel 149"
+      }
+    ],
+    "other_bands": [
+      {
+        "name": "fm_radio",
+        "freq": 100100000.0,
+        "description": "FM Radio"
+      },
+      {
+        "name": "ism_433",
+        "freq": 433920000.0,
+        "description": "433MHz ISM"
+      },
+      {
+        "name": "ism_868",
+        "freq": 868000000.0,
+        "description": "868MHz ISM"
+      },
+      {
+        "name": "cellular_850",
+        "freq": 850000000.0,
+        "description": "Cellular 850MHz"
+      }
+    ]
+  },
+  "capture_settings": {
+    "sample_rates": [
+      200000.0,
+      300000.0,
+      400000.0,
+      500000.0,
+      750000.0,
+      1000000.0,
+      1500000.0,
+      2000000.0,
+      3000000.0,
+      5000000.0
+    ],
+    "durations": [
+      60,
+      300,
+      900
+    ],
+    "gains": [
+      20,
+      30,
+      40
+    ],
+    "compression": "zstd",
+    "compression_level": 3
+  },
+  "collection_modes": {
+    "quick_survey": {
+      "sample_rate": 1000000.0,
+      "duration": 60,
+      "gain": 30
+    },
+    "detailed_capture": {
+      "sample_rate": 2000000.0,
+      "duration": 300,
+      "gain": 30
+    },
+    "long_term": {
+      "sample_rate": 1000000.0,
+      "duration": 1800,
+      "gain": 30
+    }
+  },
+  "scheduling": {
+    "time_slots": [
+      {
+        "name": "morning",
+        "start": "06:00",
+        "end": "09:00"
+      },
+      {
+        "name": "midday",
+        "start": "11:00",
+        "end": "14:00"
+      },
+      {
+        "name": "evening",
+        "start": "18:00",
+        "end": "21:00"
+      },
+      {
+        "name": "night",
+        "start": "23:00",
+        "end": "02:00"
+      }
+    ]
+  }
+}
