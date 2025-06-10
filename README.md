@@ -3,13 +3,204 @@
 A comprehensive toolkit for capturing, analyzing, and replaying RF environments using USRP B205 SDRs. This toolkit enables systematic collection of RF datasets for research, testing, and signal analysis.
 
 ## Table of Contents
+- [Quick Start for Non-Technical Users](#quick-start-for-non-technical-users)
 - [Hardware Requirements](#hardware-requirements)
 - [Software Setup](#software-setup)
-- [Quick Start](#quick-start)
 - [Detailed Usage](#detailed-usage)
 - [File Structure](#file-structure)
 - [Troubleshooting](#troubleshooting)
 - [Legal and Safety Considerations](#legal-and-safety-considerations)
+
+## Quick Start for Non-Technical Users
+
+*This section assumes all software is already installed and the USRP is connected.*
+
+### What This Toolkit Does
+
+This toolkit captures invisible radio signals (like WiFi, cell phone towers, FM radio) from the air around you and saves them as data files. Later, you can replay these signals or analyze them to understand the "radio environment" of different locations.
+
+Think of it like recording audio, but instead of recording sound waves, you're recording radio waves.
+
+### Step 1: Test Your Setup
+
+First, let's make sure everything is working:
+
+1. **Open a terminal** (the black command window)
+2. **Type this command** and press Enter:
+   ```bash
+   python3 rf_dataset_collector.py --test-rates
+   ```
+3. **Wait for it to finish** (takes 1-2 minutes)
+4. **Look for the result** - it should say something like "Recommended max rate: 5.0 MS/s"
+
+✅ **If you see a recommended rate**: Great! Your system is working.  
+❌ **If you see errors**: Ask your technical person to check the setup.
+
+### Step 2: Capture Your First Dataset
+
+Now let's capture radio signals from your location:
+
+1. **Choose a location name** (use underscores instead of spaces):
+   - Good examples: `my_office`, `coffee_shop`, `home_evening`
+   - Avoid: `my office`, `café`, `room #5`
+
+2. **Run this command** (replace `my_office` with your location name):
+   ```bash
+   python3 rf_dataset_collector.py --location "my_office" --mode quick_survey
+   ```
+
+3. **Wait for it to complete** (takes about 15 minutes)
+   - You'll see progress like: `[1/10] Capturing ch1 (2412.0 MHz): WiFi Channel 1`
+   - Each step captures signals from a different frequency
+
+4. **When finished**, you'll see: `Collection complete! Data saved in rf_dataset_my_office_YYYYMMDD_HHMMSS`
+
+### Step 3: Look at Your Data
+
+Let's see what you captured:
+
+1. **List your data** (replace the folder name with yours):
+   ```bash
+   python3 rf_replay_tool.py --dataset rf_dataset_my_office_* --list-only
+   ```
+
+2. **You'll see a list** of captured signals like:
+   ```
+   [ 1] ch1        - WiFi Channel 1        2412.0 MHz - wifi_2_4_ghz_ch1_*.zst (45.2 MB)
+   [ 2] ch6        - WiFi Channel 6        2437.0 MHz - wifi_2_4_ghz_ch6_*.zst (52.1 MB)
+   [ 3] fm_radio   - FM Radio              100.1 MHz  - other_bands_fm_radio_*.zst (12.3 MB)
+   ```
+
+### Step 4: Analyze Your Signals
+
+Let's check how strong the signals were:
+
+1. **Pick one file to analyze** (like WiFi Channel 6):
+   ```bash
+   python3 rf_replay_tool.py --dataset rf_dataset_my_office_* --file wifi_2_4_ghz_ch6_*.zst --analyze-only
+   ```
+
+2. **Look at the power level**:
+   - **-20 to -40 dB**: Very strong signals (great!)
+   - **-40 to -50 dB**: Good signals  
+   - **-50 to -60 dB**: Weak signals (okay)
+   - **Below -60 dB**: Mostly noise (try again closer to WiFi router)
+
+### Different Collection Types
+
+You can collect different amounts of data:
+
+#### Quick Survey (15 minutes)
+```bash
+python3 rf_dataset_collector.py --location "location_name" --mode quick_survey
+```
+- **Time**: 1 minute per frequency (15 minutes total)
+- **Use for**: Quick check of radio environment
+
+#### Detailed Capture (1 hour)  
+```bash
+python3 rf_dataset_collector.py --location "location_name" --mode detailed_capture
+```
+- **Time**: 5 minutes per frequency (1 hour total)
+- **Use for**: High-quality data for analysis
+
+#### Long-term Monitoring (6 hours)
+```bash
+python3 rf_dataset_collector.py --location "location_name" --mode long_term
+```
+- **Time**: 30 minutes per frequency (6 hours total)
+- **Use for**: Extended monitoring periods
+
+### Collecting from Different Locations
+
+Capture the radio environment from various places:
+
+```bash
+# At home
+python3 rf_dataset_collector.py --location "home_morning" --mode quick_survey
+
+# At work
+python3 rf_dataset_collector.py --location "office_busy" --mode quick_survey
+
+# At a coffee shop
+python3 rf_dataset_collector.py --location "starbucks_downtown" --mode quick_survey
+
+# Different times
+python3 rf_dataset_collector.py --location "home_evening" --mode quick_survey
+```
+
+### Automated Collection Over Time
+
+To collect data automatically every hour for a day:
+
+```bash
+python3 rf_dataset_collector.py --location "office" --scheduled --duration 24 --interval 60
+```
+
+- **duration 24**: Run for 24 hours
+- **interval 60**: Collect data every 60 minutes
+- **This will run by itself** - check back later
+
+### Understanding Your Results
+
+After collection, you'll have folders like:
+```
+rf_dataset_my_office_20241205_143022/
+├── wifi_2_4_ghz_ch1_*.zst     ← WiFi signals from channel 1
+├── wifi_2_4_ghz_ch6_*.zst     ← WiFi signals from channel 6  
+├── wifi_5_ghz_ch36_*.zst      ← 5GHz WiFi signals
+├── other_bands_fm_radio_*.zst ← FM radio signals
+└── collection_summary.json    ← Information about the collection
+```
+
+**File sizes tell you about signal activity:**
+- **Large files (50+ MB)**: Lots of radio activity
+- **Medium files (10-50 MB)**: Moderate activity  
+- **Small files (< 10 MB)**: Quiet radio environment
+
+### Tips for Good Data Collection
+
+1. **For WiFi signals**: Collect near your WiFi router or in busy areas
+2. **For quiet environments**: Collect in rural areas or shielded rooms
+3. **For comparison**: Collect same location at different times (morning vs evening)
+4. **For movement studies**: Collect while walking through building with laptop
+5. **Use descriptive names**: `coffee_shop_rush_hour` vs `coffee_shop_empty`
+
+### What to Do if Something Goes Wrong
+
+**If you see "overflow" or lots of 'O' characters:**
+- Your computer can't keep up
+- Try: `python3 rf_dataset_collector.py --test-rates` to find a working speed
+
+**If you see "No devices found":**
+- The USRP isn't connected properly
+- Ask your technical person to check connections
+
+**If files are very small (< 5 MB):**
+- You're in a quiet radio area, or
+- The antenna isn't connected properly
+- Try collecting closer to a WiFi router
+
+**If the program stops with errors:**
+- Write down the error message
+- Ask your technical person for help
+
+### What NOT to Do
+
+❌ **Don't unplug the USRP** while the program is running  
+❌ **Don't use spaces in location names** (use underscores: `my_office`)  
+❌ **Don't run multiple collections at the same time**  
+❌ **Don't worry about the technical details** - just follow the commands  
+
+### Next Steps
+
+Once you have collected data:
+- **Compare different locations** by looking at file sizes and power levels
+- **Look for patterns** - are some frequencies always busy?
+- **Share data** with your technical team for deeper analysis
+- **Collect more data** from interesting locations or times
+
+Remember: You're creating a library of "radio fingerprints" from different places and times!
 
 ## Hardware Requirements
 
