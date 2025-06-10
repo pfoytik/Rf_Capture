@@ -77,7 +77,7 @@ Let's check how strong the signals were:
 
 1. **Pick one file to analyze** (like WiFi Channel 6):
    ```bash
-   python3 rf_replay_tool.py --dataset rf_dataset_my_office_* --file wifi_2_4_ghz_ch6_*.zst --analyze-only
+   python3 rf_replay_tool.py --dataset rf_dataset_my_office_* --file wifi_2_4_ghz_ch6_20250605_104949.zst --analyze-only
    ```
 
 2. **Look at the power level**:
