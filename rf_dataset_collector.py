@@ -92,9 +92,12 @@ class DatasetCollector:
         
         if config_file and os.path.exists(config_file):
             with open(config_file, 'r') as f:
-                custom_config = json.load(f)
-                # Merge with defaults
-                default_config.update(custom_config)
+                try:
+                    custom_config = json.load(f)
+                    # Merge with defaults
+                    default_config.update(custom_config)
+                except Exception as e:
+                    print(f'Failed to load custom configuration file. Loading default configuration.\n Error: {e}')
         
         return default_config
     
