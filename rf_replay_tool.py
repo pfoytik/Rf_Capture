@@ -13,6 +13,7 @@ import os
 import sys
 import threading
 from datetime import datetime
+import subprocess
 
 try:
     import zstandard as zstd
@@ -279,6 +280,23 @@ class RFReplayer:
                     print(f"  {file} ({file_size:.1f} MB)")
             return None
 
+    # Visualize the recorded data utilizing GNURadio
+    def visualize(self, iq_dat, rf_fn, center_freq, gain):
+
+        with open(rf_fn + '.temp', 'wb') as f:
+            f.write(iq_dat)
+
+        subprocess.call(['python3' , 'replay.py', '--rf-fn', rf_fn, '--freq', str(center_freq), '--gain', str(gain)])
+
+        os.remove(rf_fn + '.temp')
+
+
+        
+
+
+
+
+
 def main():
     parser = argparse.ArgumentParser(description='RF Dataset Replay Tool')
     parser.add_argument('--file', type=str, help='RF data file to replay')
@@ -291,6 +309,7 @@ def main():
     parser.add_argument('--delay', type=float, default=1.0, help='Delay between loops (seconds)')
     parser.add_argument('--analyze-only', action='store_true', help='Only analyze data, don\'t transmit')
     parser.add_argument('--list-only', action='store_true', help='Only list available captures')
+    parser.add_argument('--transmit', action='store_true', help='Transmit the capture through the SDR')
     parser.add_argument('--args', type=str, default="", help='Device arguments for USRP')
     
     args = parser.parse_args()
@@ -340,11 +359,15 @@ def main():
         if args.analyze_only:
             return
         
-        # Replay the data
-        replayer.replay_data(
-            data, center_freq, sample_rate, 
-            args.gain, args.loop, args.scale, args.delay
-        )
+        if args.transmit:
+            # Replay the data
+            replayer.replay_data(
+                data, center_freq, sample_rate, 
+                args.gain, args.loop, args.scale, args.delay
+            )
+
+        if not args.transmit:
+            replayer.visualize(data, args.file, center_freq, args.gain)
         
     except Exception as e:
         print(f"Error: {e}")
