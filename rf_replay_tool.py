@@ -286,7 +286,9 @@ class RFReplayer:
         with open(rf_fn + '.temp', 'wb') as f:
             f.write(iq_dat)
 
-        subprocess.call(['python3' , 'replay.py', '--rf-fn', rf_fn, '--freq', str(center_freq), '--gain', str(gain)])
+        print(f'Opening process with args: {center_freq}, {gain}')
+
+        subprocess.call(['python3' , 'replay.py', '--rf-fn', rf_fn + '.temp', '--freq', str(center_freq), '--gain', str(gain)])
 
         os.remove(rf_fn + '.temp')
 

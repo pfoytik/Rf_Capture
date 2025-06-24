@@ -52,7 +52,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [392, 408.0]
+    coordinate: [368, 404.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_xx_0
@@ -73,15 +73,13 @@ blocks:
     coordinate: [768, 440.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle2_0
-  id: blocks_throttle2
+- name: blocks_throttle_0
+  id: blocks_throttle
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
-    limit: auto
-    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -91,9 +89,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [592, 432.0]
+    coordinate: [552, 436.0]
     rotation: 0
-    state: enabled
+    state: true
 - name: freq
   id: parameter
   parameters:
@@ -245,10 +243,9 @@ blocks:
     state: enabled
 
 connections:
-- [blocks_file_source_0, '0', blocks_throttle2_0, '0']
+- [blocks_file_source_0, '0', blocks_throttle_0, '0']
 - [blocks_multiply_const_xx_0, '0', qtgui_freq_sink_x_0, '0']
-- [blocks_throttle2_0, '0', blocks_multiply_const_xx_0, '0']
+- [blocks_throttle_0, '0', blocks_multiply_const_xx_0, '0']
 
 metadata:
   file_format: 1
-  grc_version: 3.10.9.2
